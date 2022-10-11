@@ -24,6 +24,8 @@ def main():
 	# -------------------------- Step 1: import the image whose background has been removed ----------
 	img = cv2.imread("input.jpg",1)
 
+
+
 	# -------------------------- Step 2: Sharpen the image -------------------------------------------
 	kernel = np.array([[-1,-1,-1], 
                    [-1, 9,-1],
