@@ -3,7 +3,7 @@ import socket
 
 from PIL import Image, ImageFilter
 
-address = ("10.20.110.88", 5050)
+address = ("192.168.144.178", 5050)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(address)
 server.listen()

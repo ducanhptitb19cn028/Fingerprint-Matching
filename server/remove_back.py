@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-imgo = cv2.imread('../input/inp.png')
+imgo = cv2.imread('../input/test.png')
 cv2.imshow("imgo",imgo)
 
 #Removing the background

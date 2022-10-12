@@ -5,8 +5,8 @@ import glob, os
 MIN_MATCH_COUNT = 15
 
 #PHOTO TO FIND FEATURE POINTS
-# input_img = cv.imread('/home/aastha/CV_Project/Finger-print/2.png')
-input_img = cv.imread('fig0.png')
+
+input_img = cv.imread('trial-out.png')
 input_img=input_img.astype('uint8')
 gray= cv.cvtColor(input_img,cv.COLOR_BGR2GRAY)
 sift = cv.xfeatures2d.SIFT_create()
@@ -53,6 +53,7 @@ for file in glob.glob("*.png"):
                    flags = 2)
 
     img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+
     cv.imshow("Match",img3)
 
     cv.waitKey(0)
