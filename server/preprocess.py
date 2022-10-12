@@ -20,7 +20,7 @@ def plot_images(*images):
 	plt.subplots_adjust(left=0.03, bottom=0.03, right=0.97, top=0.97)
 	plt.show()
 
-def main():
+def preprocess():
 	# -------------------------- Step 1: import the image whose background has been removed ----------
 	img = cv2.imread("input.jpg",1)
 
@@ -75,4 +75,4 @@ def main():
 	cv2.destroyAllWindows()
 
 if __name__=='__main__':
-	main()
+	preprocess()
