@@ -57,7 +57,7 @@ def preprocess():
     plot_images(a, b)
 
     # ----------------------------- Step 6: Convert image to binary image -----------------------------
-    img = cv2.imread('fig1.png', 0)
+    img = cv2.imread('../server/fig1.png', 0)
     # cv2.imshow("img",img)
     bg = cv2.dilate(img, np.ones((5, 5), dtype=np.uint8))
     bg = cv2.GaussianBlur(bg, (5, 5), 1)
@@ -65,15 +65,15 @@ def preprocess():
     src_no_bg = 255 - cv2.absdiff(img, bg)
     # cv2.imshow("src_no_bg",src_no_bg)
     ret, thresh = cv2.threshold(src_no_bg, 240, 255, cv2.THRESH_BINARY)
-    cv2.imshow("threshold", thresh)
+    # cv2.imshow("threshold", thresh)
 
     # --------------------------- Step 7: Thinning / Skeletonizing Algorithm ----------------------------
     thinned = cv2.ximgproc.thinning(thresh)
-    cv2.imshow("thinned", thinned)
+    # cv2.imshow("thinned", thinned)
     cv2.imwrite("../server/trial-out.png", thinned)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':

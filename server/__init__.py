@@ -7,7 +7,7 @@ import cv2 as cv
 import glob, os
 from PIL import Image, ImageFilter
 
-address = ("192.168.0.3", 5050)
+address = ("192.168.75.178", 5000)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(address)
 server.listen()
@@ -71,7 +71,7 @@ while True:
 
     # PHOTO TO FIND FEATURE POINTS
 
-        input_img = cv.imread('trial-out.png')
+        input_img = cv.imread('../server/trial-out.png')
         input_img = input_img.astype('uint8')
         gray = cv.cvtColor(input_img, cv.COLOR_BGR2GRAY)
         sift = cv.xfeatures2d.SIFT_create()
@@ -107,22 +107,27 @@ while True:
                 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
                 M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
                 matchesMask = mask.ravel().tolist()
-                print("Matched " + str(file))
+                data = "Matched " + str(file)
+                print(data)
+                client.send(data.encode())
                 flag = 1
             else:
                 matchesMask = None
 
-            draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
-                               singlePointColor=None,
-                               matchesMask=matchesMask,  # draw only inliers
-                               flags=2)
-
-            img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
-
-            cv.imshow("Match", img3)
+            # draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
+            #                    singlePointColor=None,
+            #                    matchesMask=matchesMask,  # draw only inliers
+            #                    flags=2)
+            #
+            # img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
+            #
+            # cv.imshow("Match", img3)
 
             # cv.waitKey(0)
             # cv.destroyAllWindows()
 
         if flag == 0:
-            print("No Matches among the given set!!")
+            str = "No Matches among the given set!!"
+            print(str)
+            client.send(str.encode())
+

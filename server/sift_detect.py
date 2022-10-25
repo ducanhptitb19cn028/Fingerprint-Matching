@@ -47,17 +47,17 @@ for file in glob.glob("*.png"):
     else:
         matchesMask = None
 
-    draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-                   singlePointColor = None,
-                   matchesMask = matchesMask, # draw only inliers
-                   flags = 2)
-
-    img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
-
-    cv.imshow("Match",img3)
-
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    # draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+    #                singlePointColor = None,
+    #                matchesMask = matchesMask, # draw only inliers
+    #                flags = 2)
+    #
+    # img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+    #
+    # cv.imshow("Match",img3)
+    #
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
 
 if flag==0:
     print("No Matches among the given set!!")

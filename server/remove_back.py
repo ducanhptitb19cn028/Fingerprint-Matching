@@ -1,38 +1,65 @@
 import cv2
-import numpy as np
+import requests
+import time
+import shutil
+import json
 
-imgo = cv2.imread('../input/test.png')
-cv2.imshow("imgo",imgo)
+headers = {'Authorization': 'f134382194a844c8bb589af58ef283e9'}
+file_list = ['input/test.png', 'input/test.png', 'input/test.png']
+params = {
+    'lang': 'en',
+    'convert_to': 'image-backgroundremover'
+}
 
-#Removing the background
-height, width = imgo.shape[:2]
+api_url = 'https://api.backgroundremover.app/v1/convert/'
+results_url = 'https://api.backgroundremover.app/v1/results/'
 
-#Create a mask holder
-mask = np.zeros(imgo.shape[:2],np.uint8)
 
-#Grab Cut the object
-bgdModel = np.zeros((1,65),np.float64)
-fgdModel = np.zeros((1,65),np.float64)
+def download_file(url, local_filename):
+    with requests.get("https://api.backgroundremover.app/%s" % url, stream=True) as r:
+        with open(local_filename, 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+    return local_filename
 
-#Hard Coding the Rect… The object must lie within this rect.
-rect = (10,10,width-30,height-30)
-cv2.grabCut(imgo,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
-mask = np.where((mask==2)|(mask==0),0,1).astype("uint8")
-img1 = imgo*mask[:,:,np.newaxis]
 
-#Get the background
-background = cv2.absdiff(imgo,img1)
+def convert_files(api_url, params, headers):
+    files = [eval(f'("files", open("{file}", "rb"))') for file in file_list]
+    print(files)
+    r = requests.post(
+        url=api_url,
+        files=files,
+        data=params,
+        headers=headers
+    )
+    return r.json()
 
-#Change all pixels in the background that are not black to white
-background[np.where((background > [0,0,0]).all(axis = 2))] = [255,255,255]
 
-#Add the background and the image
-final = background + img1
+def get_results(params):
+    if params.get('error'):
+        return params.get('error')
+    r = requests.post(
+        url=results_url,
+        data=params
+    )
+    data = r.json()
+    finished = data.get('finished')
+    while not finished:
+        if int(data.get('queue_count')) > 0:
+            print('queue: %s' % data.get('queue_count'))
+        time.sleep(5)
+        results = get_results(params)
+        print(results)
+        results = json.dumps(results)
+        if results:
+            break
+    if finished:
+        print(data.get('files'))
+        for f in data.get('files'):
+            print(f.get('url'))
+            download_file("%s" % f.get('url'), "%s" % f.get('filename'))
+        return {"finished": "files downloaded"}
+    return r.json()
 
-#To be done – Smoothening the edges….
 
-cv2.imshow('image', final )
-cv2.imwrite("input.jpg",final)
+get_results(convert_files(api_url, params, headers))
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
