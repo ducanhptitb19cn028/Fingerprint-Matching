@@ -7,12 +7,12 @@ import cv2 as cv
 import glob, os
 from PIL import Image, ImageFilter
 
-address = ("192.168.75.178", 5000)
+address = ("192.168.0.6", 5000)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(address)
 server.listen()
 print("Started Listening")
-BUFFER_SIZE = 4096 * 8
+BUFFER_SIZE = 4096
 while True:
     while True:
         client, addr = server.accept()
@@ -109,7 +109,8 @@ while True:
                 matchesMask = mask.ravel().tolist()
                 data = "Matched " + str(file)
                 print(data)
-                client.send(data.encode())
+                stri = str(data)
+                client.send(stri.encode())
                 flag = 1
             else:
                 matchesMask = None
@@ -119,7 +120,8 @@ while True:
             #                    matchesMask=matchesMask,  # draw only inliers
             #                    flags=2)
             #
-            # img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
+
+
             #
             # cv.imshow("Match", img3)
 
@@ -130,4 +132,3 @@ while True:
             str = "No Matches among the given set!!"
             print(str)
             client.send(str.encode())
-
