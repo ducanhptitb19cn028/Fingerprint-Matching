@@ -15,7 +15,7 @@ img1=cv.drawKeypoints(input_img,kp,input_img)
 
 flag=0
 
-os.chdir("../output/")
+os.chdir("../database/")
 for file in glob.glob("*.png"):
 
     frame=cv.imread(file)

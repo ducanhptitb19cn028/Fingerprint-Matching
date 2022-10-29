@@ -79,8 +79,8 @@ while True:
         img1 = cv.drawKeypoints(input_img, kp, input_img)
 
         flag = 0
-
-        os.chdir("../output/")
+        stri=""
+        os.chdir("../database/")
         for file in glob.glob("*.png"):
 
             frame = cv.imread(file)
@@ -110,7 +110,8 @@ while True:
                 data = "Matched " + str(file)
                 print(data)
                 stri = str(data)
-                client.send(stri.encode())
+
+
                 flag = 1
             else:
                 matchesMask = None
@@ -129,6 +130,7 @@ while True:
             # cv.destroyAllWindows()
 
         if flag == 0:
-            str = "No Matches among the given set!!"
-            print(str)
-            client.send(str.encode())
+            stri = "No Matches among the given set!!"
+            print(stri)
+        client.sendall(stri.encode())
+        client.close()
