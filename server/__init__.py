@@ -20,7 +20,8 @@ while True:
     recv_data = client.recv(BUFFER_SIZE)
     while recv_data:
         file_stream.write(recv_data)
-        recv_data = client.recv(BUFFER_SIZE)
+        if recv_data:
+            recv_data = client.recv(BUFFER_SIZE)
     image = Image.open(file_stream)
     image = image.filter(ImageFilter.GaussianBlur(radius=0.01))
     image.save('../input/test.png', format='png')
@@ -107,7 +108,7 @@ while True:
             M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
             matchesMask = mask.ravel().tolist()
             data = "The finger print belongs to " + str(file)
-            print(data)
+            # print(data)
             stri = str(data)
 
 
@@ -133,6 +134,9 @@ while True:
 
     if flag == 0:
         stri = "No one matches this finger print!!"
-        print(stri)
+        # print(stri)
+    print(stri)
+    # stri = "No one matches this finger print!!"
+    # print(stri)
     client.send(stri.encode())
     client.close()
