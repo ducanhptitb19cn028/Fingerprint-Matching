@@ -1,5 +1,7 @@
 import io
 import socket
+import time
+
 import cv2
 import preprocess
 import numpy as np
@@ -14,14 +16,16 @@ server.listen()
 print("Started Listening")
 BUFFER_SIZE = 4096
 while True:
+    stri=""
+    client_ip=""
     client, addr = server.accept()
-    print('got connected from', addr)
+    print('got connected from', addr[0])
+    client_ip=addr[0]
     file_stream = io.BytesIO()
     recv_data = client.recv(BUFFER_SIZE)
     while recv_data:
         file_stream.write(recv_data)
-        if recv_data:
-            recv_data = client.recv(BUFFER_SIZE)
+        recv_data = client.recv(BUFFER_SIZE)
     image = Image.open(file_stream)
     image = image.filter(ImageFilter.GaussianBlur(radius=0.01))
     image.save('../input/test.png', format='png')
@@ -62,6 +66,7 @@ while True:
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
     preprocess.preprocess()
+    time.sleep(1000)
 # with open('../input/test.png', 'rb') as file:
 #     file_data = file.read(BUFFER_SIZE)
 #     while file_data:
@@ -79,7 +84,7 @@ while True:
     img1 = cv.drawKeypoints(input_img, kp, input_img)
 
     flag = 0
-    stri=""
+    strl = ""
     os.chdir("../database/")
     for file in glob.glob("*.png"):
 
@@ -109,8 +114,8 @@ while True:
             matchesMask = mask.ravel().tolist()
             data = "The finger print belongs to " + str(file)
             # print(data)
-            stri = str(data)
-
+            strl = str(data)
+            stri = strl[0:len(strl)-4]
 
             flag = 1
         else:
@@ -138,5 +143,8 @@ while True:
     print(stri)
     # stri = "No one matches this finger print!!"
     # print(stri)
-    client.send(stri.encode())
-    client.close()
+
+    client_socket = socket.socket()  # instantiate
+    client_socket.connect((addr[0],6000))  # connect to the server
+    client_socket.send(stri.encode())
+    client_socket.close()
