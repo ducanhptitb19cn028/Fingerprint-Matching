@@ -66,7 +66,7 @@ while True:
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
     preprocess.preprocess()
-    time.sleep(1000)
+    # time.sleep(1000)
 # with open('../input/test.png', 'rb') as file:
 #     file_data = file.read(BUFFER_SIZE)
 #     while file_data:
