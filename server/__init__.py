@@ -1,7 +1,5 @@
 import io
 import socket
-import time
-
 import cv2
 import preprocess
 import numpy as np
